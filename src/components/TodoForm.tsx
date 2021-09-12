@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import axios from '../api/axios';
+import axios, {Urls} from '../api/axios';
 
 interface Props {
   refreshTodos: () => void;
@@ -22,7 +22,7 @@ const TodoFrom: React.FC<Props> = ({refreshTodos}) => {
     };
 
     if (name.trim()) {
-      axios('/api/add', newTodo);
+      axios(Urls.ADD, newTodo);
       refreshTodos();
       setName('');
     }

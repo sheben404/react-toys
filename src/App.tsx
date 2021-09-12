@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import './App.css';
 import TodoForm from './components/TodoForm';
-import axios from './api/axios';
+import axios, {Urls} from './api/axios';
 
 type Todo = {
   id: number,
@@ -16,7 +16,7 @@ const App: React.FC = () => {
 
   const refreshTodos = () => {
     // 这里传入泛型 <Todos> 声明 axios 返回的数据类型
-    axios<Todos>('/api/todos').then(setTodos);
+    axios(Urls.TODOS).then(setTodos);
   };
 
   useEffect(() => {
@@ -24,7 +24,7 @@ const App: React.FC = () => {
   }, []);
 
   const onToggleTodo = async (todo: Todo) => {
-    await axios('/api/toggle', todo.id);
+    await axios(Urls.TOGGLE, todo.id);
     refreshTodos();
   };
 

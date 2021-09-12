@@ -16,16 +16,48 @@ let todos = [
   }
 ];
 
-type Url = '/api/todos' | '/api/toggle' | '/api/add'
+export enum Urls {
+  TODOS = '/api/todos',
+  TOGGLE = '/api/toggle',
+  ADD = '/api/add'
+}
 
-// 正常情况下 箭头函数的泛型可以直接加：const foo = <T>(x: T) => x;
-// 但是由于这是 tsx 文件，<> 会被认为是 tag
-// 因此需要写成 <T extends unknown>
+type Todo = typeof todos[0]
+type Todos = typeof todos
 
-// 这里的泛型 T 被原封不动地交给了返回值 Promise，所以外部 axios 调用的时候传入泛型 Todos
-// 就可以判定出返回值为 Promise
-// TS 就可以推断出这个 promise 去 resolve 的 data 的类型是 Todos
-const axios = <T extends unknown>(url: Url, payload?: any): Promise<T> | never => {
+type Key<U> = U extends Urls.TOGGLE
+  ? 'toggle'
+  : U extends Urls.ADD
+    ? 'add'
+    : U extends Urls.TODOS
+      ? 'todos'
+      : 'other'
+
+type Payload<U> = {
+  toggle: number,
+  add: Todo,
+  todos: any,
+  other: any
+}[Key<U>]
+
+type Result<U> = {
+  toggle: boolean,
+  add: boolean,
+  todos: Todos,
+  other: any
+}[Key<U>]
+
+type UrlNoPayload = Urls.TODOS
+type UrlWithPayload = Exclude<Urls, UrlNoPayload>
+
+function axios<U extends UrlNoPayload>(url: U): Promise<Result<U>>
+
+function axios<U extends UrlWithPayload>(url: U, payload: Payload<U>): Promise<Result<U>> | never
+
+function axios<U extends Urls>(
+  url: U,
+  payload?: Payload<U>
+) {
   let data;
   switch (url) {
     case '/api/todos':
@@ -40,7 +72,7 @@ const axios = <T extends unknown>(url: Url, payload?: any): Promise<T> | never =
       }
       break;
     case '/api/add':
-      todos.push(payload);
+      todos.push(payload!);
       break;
     default:
       throw new Error('Unknown API');
