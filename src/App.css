@@ -1,0 +1,12 @@
+.done {
+  text-decoration: line-through;
+  color: rgb(67, 236, 67);
+}
+
+.todo-form {
+  margin-bottom: 12px;
+}
+
+.todo-input {
+  margin-right: 8px;
+}
