@@ -19,8 +19,11 @@ const Child1 = () => <section className={'child'}>child1<User/></section>;
 const Child2 = () => <section className={'child'}>child2<UserModifier/></section>;
 const Child3 = () => <section className={'child'}>child3</section>;
 
-const User = connect(({state, dispatch}) => {
-  return <div>User:{state.user.name}</div>;
+const User = connect((state: any) => {
+  return {user: state.user}
+})
+(({ user}) => {
+  return <div>User:{user.name}</div>;
 });
 
 const _UserModifier = ({dispatch, state, children}: any) => {
@@ -38,6 +41,6 @@ const _UserModifier = ({dispatch, state, children}: any) => {
   );
 };
 
-const UserModifier = connect(_UserModifier);
+const UserModifier = connect()(_UserModifier);
 
 export default App;

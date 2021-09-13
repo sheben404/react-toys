@@ -34,10 +34,11 @@ const reducer = (state: any, {type, payload}: { type: string, payload: any }) =>
   }
 };
 
-export const connect = (Component: React.FC<any>) => {
+export const connect = (selector?: any) => (Component: React.FC<any>) => {
   return (props: any) => {
     const {state, setState} = useContext(appContext);
     const [, update] = useState({});
+    const data = selector ? selector(state) : {state: state};
     useEffect(() => {
       store.subscribe(() => {
         update({});
@@ -46,6 +47,6 @@ export const connect = (Component: React.FC<any>) => {
     const dispatch = (action: any) => {
       setState(reducer(state, action));
     };
-    return <Component {...props} state={state} dispatch={dispatch}/>;
+    return <Component {...props} {...data} dispatch={dispatch}/>;
   };
 };
