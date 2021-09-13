@@ -1,41 +1,7 @@
-import React, {Component, useContext, useEffect, useState} from 'react';
+import React from 'react';
+import {appContext, store, connect} from './redux';
 import './App.css';
 
-const appContext = React.createContext<any>(null);
-
-const store: any = {
-  state: {
-    user: {name: 'sheben', age: 20}
-  },
-  setState(newState: any) {
-    store.state = newState;
-    store.listeners.map((fn: any) => fn(store.state));
-  },
-  listeners: [],
-  subscribe(fn: any) {
-    store.listeners.push(fn);
-    return () => {
-      const index = store.listeners.indexOf(fn);
-      store.listeners.splice(index, 1);
-    };
-  }
-};
-
-const connect = (Component: React.FC<any>) => {
-  return (props: any) => {
-    const {state, setState} = useContext(appContext);
-    const [, update] = useState({});
-    useEffect(() => {
-      store.subscribe(() => {
-        update({});
-      });
-    }, []);
-    const dispatch = (action: any) => {
-      setState(reducer(state, action));
-    };
-    return <Component {...props} state={state} dispatch={dispatch}/>;
-  };
-};
 
 function App() {
   return (
@@ -56,21 +22,6 @@ const Child3 = () => <section className={'child'}>child3</section>;
 const User = connect(({state, dispatch}) => {
   return <div>User:{state.user.name}</div>;
 });
-
-const reducer = (state: any, {type, payload}: { type: string, payload: any }) => {
-  if (type === 'updateUser') {
-    return {
-      ...state,
-      user: {
-        ...state.user,
-        ...payload
-      }
-    };
-  } else {
-    return state;
-  }
-};
-
 
 const _UserModifier = ({dispatch, state, children}: any) => {
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
