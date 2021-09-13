@@ -1,6 +1,7 @@
 import React from 'react';
 import {appContext, store, connect} from './redux';
 import './App.css';
+import {connectToUsers} from './connectors/connectToUsers';
 
 
 function App() {
@@ -23,14 +24,11 @@ const Child3 = connect((state: any) => {
   <div>Group:{group.name}</div>
 </section>);
 
-const User = connect((state: any) => {
-  return {user: state.user};
-})
-(({user}) => {
+const User = connectToUsers(({user}) => {
   return <div>User:{user.name}</div>;
 });
 
-const _UserModifier = ({updateUser, state, children}: any) => {
+const _UserModifier = ({updateUser, user, children}: any) => {
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     updateUser({name: e.target.value});
   };
@@ -38,17 +36,13 @@ const _UserModifier = ({updateUser, state, children}: any) => {
     <div>
       {children}
       <input
-        value={state.user.name}
+        value={user.name}
         onChange={onChange}
       />
     </div>
   );
 };
 
-const UserModifier = connect(null, (dispatch: any) => {
-  return {
-    updateUser: (attrs: any) => dispatch({type: 'updateUser', payload: attrs})
-  };
-})(_UserModifier);
+const UserModifier = connectToUsers(_UserModifier);
 
 export default App;
