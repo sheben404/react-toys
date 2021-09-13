@@ -1,8 +1,28 @@
 import React from 'react';
-import {appContext, store, connect} from './redux';
+import {appContext, createStore, connect} from './redux';
 import './App.css';
 import {connectToUsers} from './connectors/connectToUsers';
 
+const initState = {
+  user: {name: '社本', age: 20},
+  group: {name: '前端组'}
+};
+
+const reducer = (state: any, {type, payload}: any) => {
+  if (type === 'updateUser') {
+    return {
+      ...state,
+      user: {
+        ...state.user,
+        ...payload
+      }
+    };
+  } else {
+    return state;
+  }
+};
+
+const store = createStore(reducer, initState);
 
 function App() {
   return (

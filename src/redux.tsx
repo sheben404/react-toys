@@ -2,11 +2,9 @@ import React, {useContext, useEffect, useState} from 'react';
 
 export const appContext = React.createContext<any>(null);
 
-export const store: any = {
-  state: {
-    user: {name: 'sheben', age: 20},
-    group: {name: '前端组'}
-  },
+const store: any = {
+  state: undefined,
+  reducer: undefined,
   setState(newState: any) {
     store.state = newState;
     store.listeners.map((fn: any) => fn(store.state));
@@ -21,18 +19,10 @@ export const store: any = {
   }
 };
 
-const reducer = (state: any, {type, payload}: { type: string, payload: any }) => {
-  if (type === 'updateUser') {
-    return {
-      ...state,
-      user: {
-        ...state.user,
-        ...payload
-      }
-    };
-  } else {
-    return state;
-  }
+export const createStore = (reducer: any, initState: any) => {
+  store.state = initState;
+  store.reducer = reducer;
+  return store
 };
 
 const changed = (oldState: any, newState: any) => {
@@ -48,7 +38,7 @@ const changed = (oldState: any, newState: any) => {
 export const connect = (selector?: any, mapDispatchToProps?: any) => (Component: React.FC<any>) => {
   return (props: any) => {
     const dispatch = (action: any) => {
-      setState(reducer(state, action));
+      setState(store.reducer(state, action));
     };
     const {state, setState} = useContext(appContext);
     const [, update] = useState({});
