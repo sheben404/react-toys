@@ -37,6 +37,6 @@ const ItemCard = React.memo((props: Props) => {
       </p>
     </div>
   );
-}, areEqual); // 默认情况下 memo 就是进行浅拷贝比较，因此 这里的 areEqual 可以不写
+}, areEqual); // 默认情况下 memo 进行浅拷贝比较，对于引用类型，首先会比较地址，然后再比较其中的属性，因此这里的 areEqual 不可以省略
 
 export default ItemCard;
