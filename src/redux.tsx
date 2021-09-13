@@ -45,11 +45,15 @@ const changed = (oldState: any, newState: any) => {
   return changed;
 };
 
-export const connect = (selector?: any) => (Component: React.FC<any>) => {
+export const connect = (selector?: any, mapDispatchToProps?: any) => (Component: React.FC<any>) => {
   return (props: any) => {
+    const dispatch = (action: any) => {
+      setState(reducer(state, action));
+    };
     const {state, setState} = useContext(appContext);
     const [, update] = useState({});
     const data = selector ? selector(state) : {state: state};
+    const dispatchers = mapDispatchToProps ? mapDispatchToProps(dispatch) : {dispatch};
     useEffect(() => {
       const unSubscribe = store.subscribe(() => {
         const newData = selector ? selector(store.state) : {state: store.state};
@@ -61,11 +65,8 @@ export const connect = (selector?: any) => (Component: React.FC<any>) => {
       // 这里最好加一个取消订阅，否则在 selector 变化时会出现重复订阅
       // unSubscribe 这个函数只用到了一次，因此可以省略函数名，直接 return store.subscribe
       // 不过那么写不易理解，因此不做那个改动了
-      return unSubscribe
+      return unSubscribe;
     }, [selector]);
-    const dispatch = (action: any) => {
-      setState(reducer(state, action));
-    };
-    return <Component {...props} {...data} dispatch={dispatch}/>;
+    return <Component {...props} {...data} {...dispatchers}/>;
   };
 };

@@ -30,9 +30,9 @@ const User = connect((state: any) => {
   return <div>User:{user.name}</div>;
 });
 
-const _UserModifier = ({dispatch, state, children}: any) => {
+const _UserModifier = ({updateUser, state, children}: any) => {
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch({type: 'updateUser', payload: {name: e.target.value}});
+    updateUser({name: e.target.value});
   };
   return (
     <div>
@@ -45,6 +45,10 @@ const _UserModifier = ({dispatch, state, children}: any) => {
   );
 };
 
-const UserModifier = connect()(_UserModifier);
+const UserModifier = connect(null, (dispatch: any) => {
+  return {
+    updateUser: (attrs: any) => dispatch({type: 'updateUser', payload: attrs})
+  };
+})(_UserModifier);
 
 export default App;
