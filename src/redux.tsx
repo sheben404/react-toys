@@ -22,7 +22,7 @@ const store: any = {
 export const createStore = (reducer: any, initState: any) => {
   store.state = initState;
   store.reducer = reducer;
-  return store
+  return store;
 };
 
 const changed = (oldState: any, newState: any) => {
@@ -59,4 +59,14 @@ export const connect = (selector?: any, mapDispatchToProps?: any) => (Component:
     }, [selector]);
     return <Component {...props} {...data} {...dispatchers}/>;
   };
+};
+
+export const Provider = ({store, children}: any) => {
+  return (
+    <appContext.Provider value={store}>
+      <div className="App">
+        {children}
+      </div>
+    </appContext.Provider>
+  );
 };
