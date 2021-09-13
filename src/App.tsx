@@ -1,15 +1,45 @@
-import React, {Component, useContext, useState} from 'react';
+import React, {Component, useContext, useEffect, useState} from 'react';
 import './App.css';
 
 const appContext = React.createContext<any>(null);
 
-function App() {
-  const [appState, setAppState] = useState({
+const store: any = {
+  state: {
     user: {name: 'sheben', age: 20}
-  });
-  const contextValue = {appState, setAppState};
+  },
+  setState(newState: any) {
+    store.state = newState;
+    store.listeners.map((fn: any) => fn(store.state));
+  },
+  listeners: [],
+  subscribe(fn: any) {
+    store.listeners.push(fn);
+    return () => {
+      const index = store.listeners.indexOf(fn);
+      store.listeners.splice(index, 1);
+    };
+  }
+};
+
+const connect = (Component: React.FC<any>) => {
+  return (props: any) => {
+    const {state, setState} = useContext(appContext);
+    const [, update] = useState({});
+    useEffect(() => {
+      store.subscribe(() => {
+        update({});
+      });
+    }, []);
+    const dispatch = (action: any) => {
+      setState(reducer(state, action));
+    };
+    return <Component {...props} state={state} dispatch={dispatch}/>;
+  };
+};
+
+function App() {
   return (
-    <appContext.Provider value={contextValue}>
+    <appContext.Provider value={store}>
       <div className="App">
         <Child1/>
         <Child2/>
@@ -23,10 +53,9 @@ const Child1 = () => <section className={'child'}>child1<User/></section>;
 const Child2 = () => <section className={'child'}>child2<UserModifier/></section>;
 const Child3 = () => <section className={'child'}>child3</section>;
 
-const User = () => {
-  const contextValue = useContext(appContext);
-  return <div>User:{contextValue.appState!.user!.name}</div>;
-};
+const User = connect(({state, dispatch}) => {
+  return <div>User:{state.user.name}</div>;
+});
 
 const reducer = (state: any, {type, payload}: { type: string, payload: any }) => {
   if (type === 'updateUser') {
@@ -42,17 +71,6 @@ const reducer = (state: any, {type, payload}: { type: string, payload: any }) =>
   }
 };
 
-
-const connect = (Component: React.FC<any>) => {
-  return (props: any) => {
-    const {appState, setAppState} = useContext(appContext);
-    const dispatch = (action: any) => {
-      setAppState(reducer(appState, action));
-    };
-    return <Component {...props} state={appState} dispatch={dispatch}/>;
-  };
-
-};
 
 const _UserModifier = ({dispatch, state, children}: any) => {
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
