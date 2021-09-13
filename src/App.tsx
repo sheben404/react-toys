@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {Component, useContext, useState} from 'react';
 import './App.css';
 
 const appContext = React.createContext<any>(null);
@@ -20,7 +20,7 @@ function App() {
 }
 
 const Child1 = () => <section className={'child'}>child1<User/></section>;
-const Child2 = () => <section className={'child'}>child2<Wrapper/></section>;
+const Child2 = () => <section className={'child'}>child2<UserModifier/></section>;
 const Child3 = () => <section className={'child'}>child3</section>;
 
 const User = () => {
@@ -42,21 +42,25 @@ const reducer = (state: any, {type, payload}: { type: string, payload: any }) =>
   }
 };
 
-const Wrapper = () => {
-  const {appState, setAppState} = useContext(appContext);
-  const dispatch = (action: any) => {
-    setAppState(reducer(appState, action));
+
+const connect = (Component: React.FC<any>) => {
+  return (props: any) => {
+    const {appState, setAppState} = useContext(appContext);
+    const dispatch = (action: any) => {
+      setAppState(reducer(appState, action));
+    };
+    return <Component {...props} state={appState} dispatch={dispatch}/>;
   };
-  return <UserModifier state={appState} dispatch={dispatch}/>;
+
 };
 
-const UserModifier = ({dispatch, state}: { dispatch: any, state: any }) => {
-
+const _UserModifier = ({dispatch, state, children}: any) => {
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch({type: 'updateUser', payload: {name: e.target.value}});
   };
   return (
     <div>
+      {children}
       <input
         value={state.user.name}
         onChange={onChange}
@@ -64,5 +68,7 @@ const UserModifier = ({dispatch, state}: { dispatch: any, state: any }) => {
     </div>
   );
 };
+
+const UserModifier = connect(_UserModifier);
 
 export default App;
