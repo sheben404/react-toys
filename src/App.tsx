@@ -20,7 +20,7 @@ function App() {
 }
 
 const Child1 = () => <section className={'child'}>child1<User/></section>;
-const Child2 = () => <section className={'child'}>child2<UserModifier/></section>;
+const Child2 = () => <section className={'child'}>child2<Wrapper/></section>;
 const Child3 = () => <section className={'child'}>child3</section>;
 
 const User = () => {
@@ -42,18 +42,23 @@ const reducer = (state: any, {type, payload}: { type: string, payload: any }) =>
   }
 };
 
-const UserModifier = () => {
+const Wrapper = () => {
   const {appState, setAppState} = useContext(appContext);
+  const dispatch = (action: any) => {
+    setAppState(reducer(appState, action));
+  };
+  return <UserModifier state={appState} dispatch={dispatch}/>;
+};
+
+const UserModifier = ({dispatch, state}: { dispatch: any, state: any }) => {
+
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setAppState(reducer(
-      appState,
-      {type: 'updateUser', payload: {name: e.target.value}})
-    );
+    dispatch({type: 'updateUser', payload: {name: e.target.value}});
   };
   return (
     <div>
       <input
-        value={appState.user.name}
+        value={state.user.name}
         onChange={onChange}
       />
     </div>
