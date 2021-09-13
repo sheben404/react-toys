@@ -11,7 +11,7 @@ function App() {
   return (
     <appContext.Provider value={contextValue}>
       <div className="App">
-        <Child1 />
+        <Child1/>
         <Child2/>
         <Child3/>
       </div>
@@ -28,11 +28,27 @@ const User = () => {
   return <div>User:{contextValue.appState!.user!.name}</div>;
 };
 
+const reducer = (state: any, {type, payload}: { type: string, payload: any }) => {
+  if (type === 'updateUser') {
+    return {
+      ...state,
+      user: {
+        ...state.user,
+        ...payload
+      }
+    };
+  } else {
+    return state;
+  }
+};
+
 const UserModifier = () => {
   const {appState, setAppState} = useContext(appContext);
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    appState.user.name = e.target.value;
-    setAppState({...appState});
+    setAppState(reducer(
+      appState,
+      {type: 'updateUser', payload: {name: e.target.value}})
+    );
   };
   return (
     <div>
