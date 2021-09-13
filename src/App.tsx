@@ -1,13 +1,15 @@
-import React, { useState } from 'react'
-import './App.css'
+import React from 'react';
+import './App.css';
+import 'antd/dist/antd.css';
+import Cart from './cart';
 
 function App() {
 
   return (
     <div className="App">
-      div
+      <Cart/>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
