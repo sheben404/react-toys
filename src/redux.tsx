@@ -26,7 +26,17 @@ const store: any = {
   }
 };
 
-const dispatch = store.dispatch;
+let dispatch = store.dispatch;
+
+const preDispatch = dispatch;
+
+dispatch = (action: any) => {
+  if (action instanceof Function) {
+    action(dispatch);
+  } else {
+    preDispatch(action);
+  }
+};
 
 export const createStore = (_reducer: any, initState: any) => {
   state = initState;

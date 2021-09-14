@@ -31,6 +31,7 @@ function App() {
         <Child1/>
         <Child2/>
         <Child3/>
+        <Child4/>
       </div>
     </Provider>
   );
@@ -43,6 +44,7 @@ const Child3 = connect((state: any) => {
 })(({group}) => <section className={'child'}>child3
   <div>Group:{group.name}</div>
 </section>);
+const Child4 = () => <section className={'child'}>child4<AsynUserModifier/></section>;
 
 const User = connectToUsers(({user}) => {
   return <div>User:{user.name}</div>;
@@ -55,7 +57,7 @@ const _UserModifier = ({updateUser, user, children}: any) => {
   return (
     <div>
       {children}
-      <input
+      输入直接更新：<input
         value={user.name}
         onChange={onChange}
       />
@@ -64,5 +66,35 @@ const _UserModifier = ({updateUser, user, children}: any) => {
 };
 
 const UserModifier = connectToUsers(_UserModifier);
+
+const ajax = (url: string) => {
+  if (url === '/user') {
+    return new Promise(((resolve, reject) => {
+      setTimeout(() => {
+        resolve({name: '异步更新获取的社本本本', age: 10});
+      }, 1000);
+    }));
+  }
+};
+
+const fetchUser = (dispatch: any) => {
+  ajax('/user')!.then((response: any) => {
+    dispatch({type: 'updateUser', payload: response});
+  });
+};
+
+const _AsynUserModifier = ({dispatch, state, children}: any) => {
+  const onClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    dispatch(fetchUser);
+  };
+  return (
+    <div>
+      <div>User: {state.user.name}</div>
+      <button onClick={onClick}>异步获取 user(1 秒后更新)</button>
+    </div>
+  );
+};
+
+const AsynUserModifier = connect(null, null)(_AsynUserModifier);
 
 export default App;
