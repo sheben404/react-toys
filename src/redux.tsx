@@ -2,26 +2,35 @@ import React, {useContext, useEffect, useState} from 'react';
 
 export const appContext = React.createContext<any>(null);
 
+let state: any = undefined;
+let reducer: any = undefined;
+let listeners: any = [];
+const setState = (newState: any) => {
+  state = newState;
+  listeners.map((fn: any) => fn(state));
+};
+
 const store: any = {
-  state: undefined,
-  reducer: undefined,
-  setState(newState: any) {
-    store.state = newState;
-    store.listeners.map((fn: any) => fn(store.state));
+  getState() {
+    return state;
   },
-  listeners: [],
+  dispatch(action: any) {
+    setState(reducer(state, action));
+  },
   subscribe(fn: any) {
-    store.listeners.push(fn);
+    listeners.push(fn);
     return () => {
-      const index = store.listeners.indexOf(fn);
-      store.listeners.splice(index, 1);
+      const index = listeners.indexOf(fn);
+      listeners.splice(index, 1);
     };
   }
 };
 
-export const createStore = (reducer: any, initState: any) => {
-  store.state = initState;
-  store.reducer = reducer;
+const dispatch = store.dispatch;
+
+export const createStore = (_reducer: any, initState: any) => {
+  state = initState;
+  reducer = _reducer;
   return store;
 };
 
@@ -37,18 +46,14 @@ const changed = (oldState: any, newState: any) => {
 
 export const connect = (selector?: any, mapDispatchToProps?: any) => (Component: React.FC<any>) => {
   return (props: any) => {
-    const dispatch = (action: any) => {
-      setState(store.reducer(state, action));
-    };
-    const {state, setState} = useContext(appContext);
+
     const [, update] = useState({});
     const data = selector ? selector(state) : {state: state};
     const dispatchers = mapDispatchToProps ? mapDispatchToProps(dispatch) : {dispatch};
     useEffect(() => {
       const unSubscribe = store.subscribe(() => {
-        const newData = selector ? selector(store.state) : {state: store.state};
+        const newData = selector ? selector(state) : {state: state};
         if (changed(data, newData)) {
-          console.log('update');
           update({});
         }
       });
