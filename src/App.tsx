@@ -58,9 +58,9 @@ const _UserModifier = ({updateUser, user, children}: any) => {
     <div>
       {children}
       输入直接更新：<input
-        value={user.name}
-        onChange={onChange}
-      />
+      value={user.name}
+      onChange={onChange}
+    />
     </div>
   );
 };
@@ -77,24 +77,30 @@ const ajax = (url: string) => {
   }
 };
 
-const fetchUser = (dispatch: any) => {
-  ajax('/user')!.then((response: any) => {
-    dispatch({type: 'updateUser', payload: response});
-  });
+// const fetchUser = (dispatch: any) => {
+//   ajax('/user')!.then((response: any) => {
+//     dispatch({type: 'updateUser', payload: response});
+//   });
+// };
+
+const fetchUserPromise = () => {
+  return ajax('/user')!.then(res => res);
 };
 
 const _AsynUserModifier = ({dispatch, state, children}: any) => {
   const onClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    dispatch(fetchUser);
+    // dispatch(fetchUser);
+    dispatch({type: 'updateUser', payload: fetchUserPromise()});
+  }
+    ;
+    return (
+      <div>
+        <div>User: {state.user.name}</div>
+        <button onClick={onClick}>异步获取 user(1 秒后更新)</button>
+      </div>
+    );
   };
-  return (
-    <div>
-      <div>User: {state.user.name}</div>
-      <button onClick={onClick}>异步获取 user(1 秒后更新)</button>
-    </div>
-  );
-};
 
-const AsynUserModifier = connect(null, null)(_AsynUserModifier);
+  const AsynUserModifier = connect(null, null)(_AsynUserModifier);
 
-export default App;
+  export default App;
