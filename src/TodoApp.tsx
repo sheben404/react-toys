@@ -1,4 +1,4 @@
-import {FC, useState} from 'react';
+import {FC, useCallback, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Todo} from './store/todos/reducer';
 import {FilterType} from './store/filter/reducer';
@@ -27,22 +27,25 @@ const TodoApp: FC = () => {
 
   const [task, setTask] = useState<string>('');
 
-  const onAddTodo = () => {
+
+  const onAddTodo = useCallback(() => {
     dispatch(addTodo(task));
     setTask('');
-  };
+  }, [dispatch]);
 
-  const onToggleTodo = (id: number) => {
+  const onToggleTodo = useCallback((id: number) => {
     dispatch(toggleTodo(id));
-  };
+  }, [dispatch]);
 
-  const onRemoveTodo = (id: number) => {
+
+  const onRemoveTodo = useCallback((id: number) => {
     dispatch(removeTodo(id));
-  };
+  }, [dispatch]);
 
-  const onFilter = (filter: FilterType) => {
+
+  const onFilter = useCallback((filter: FilterType) => {
     dispatch(setFilter(filter));
-  };
+  }, [dispatch]);
 
   const footer = (
     <div className="footer">
