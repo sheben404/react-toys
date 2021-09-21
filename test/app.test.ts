@@ -1,4 +1,4 @@
-import {Todo} from '../src/store/todoReducer';
+import {Todo} from '../src/store/todos/reducer';
 import store from '../src/store/store';
 
 it('可以添加一条 todo', () => {

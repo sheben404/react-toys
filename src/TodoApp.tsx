@@ -1,9 +1,10 @@
 import {FC, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {Todo} from './store/todoReducer';
-import {FilterType} from './store/filterReducer';
-import {selectFilteredTodos, selectTodoNeeded} from './store/selectors';
-import {addTodo, removeTodo, setFilter, toggleTodo} from './store/actionCreators';
+import {Todo} from './store/todos/reducer';
+import {FilterType} from './store/filter/reducer';
+import {selectFilteredTodos, selectTodoNeeded} from './store/todos/selectors';
+import {addTodo, removeTodo, toggleTodo} from './store/todos/actionCreators';
+import {setFilter} from './store/filter/actionCreators';
 import React from 'react';
 import {Input, List, Radio, Spin} from 'antd';
 import TodoItem from './components/TodoItem';

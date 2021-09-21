@@ -1,4 +1,4 @@
-import {StoreType} from '../TodoApp';
+import {StoreType} from '../../TodoApp';
 
 export const selectFilteredTodos = (state: StoreType) => {
   const todos = Object.values(state.todos);

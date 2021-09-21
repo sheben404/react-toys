@@ -1,4 +1,4 @@
-import {Todo} from '../store/todoReducer';
+import {Todo} from '../store/todos/reducer';
 import {FC, useState} from 'react';
 import {Checkbox, Input, List} from 'antd';
 import React from 'react';

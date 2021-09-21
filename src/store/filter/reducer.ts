@@ -4,7 +4,7 @@ export type FilterType = 'all' | 'todo' | 'done'
 
 const initFilter: FilterType = 'all';
 
-const filterReducer = (filter: FilterType = initFilter, action: any) => {
+const reducer = (filter: FilterType = initFilter, action: any) => {
   switch (action.type) {
     case SET_FILTER:
       return action.payload;
@@ -15,4 +15,4 @@ const filterReducer = (filter: FilterType = initFilter, action: any) => {
   }
 };
 
-export default filterReducer;
+export default reducer;
