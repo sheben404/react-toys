@@ -1,3 +1,5 @@
+import {ADD_TODO, REMOVE_TODO, RESET_TODO, TOGGLE_TODO} from './actionTypes';
+
 export interface Todo {
   id: number,
   text: string,
@@ -24,21 +26,21 @@ const initTodos: Todo[] = [
 
 const todosReducer = (todos: Todo[] = initTodos, action: any) => {
   switch (action.type) {
-    case 'addTodo':
+    case ADD_TODO:
       return [...todos, action.payload];
-    case 'removeTodo':
+    case REMOVE_TODO:
       return todos.filter(todo => todo.id !== action.payload);
-    case 'toggleTodo':
+    case TOGGLE_TODO:
       return todos.map(todo =>
         todo.id === action.payload
           ? {...todo, state: todo.state === 'todo' ? 'done' : 'todo'}
           : todo
       );
-    case 'reset':
+    case RESET_TODO:
       return initTodos;
     default:
       return todos;
   }
 };
 
-export default todosReducer
+export default todosReducer;

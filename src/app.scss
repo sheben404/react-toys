@@ -1,0 +1,59 @@
+.app {
+  margin: 0 auto;
+  max-width: 500px;
+  text-align: center;
+
+  .todo {
+    &-list {
+      margin-top: 16px;
+    }
+    &-item {
+      &:hover {
+        .todo-right {
+          visibility: visible;
+        }
+      }
+    }
+    &-left {
+      flex-grow: 1;
+      padding-right: 8px;
+      display: inline-flex;
+      align-items: center;
+    }
+    &-check {
+      margin-right: 8px;
+    }
+    &-text {
+      font-size: 1.2em;
+      transition: all .3s;
+      &.done {
+        text-decoration: line-through;
+        color: #bfbfbf;
+      }
+    }
+    &-right {
+      display: inline-flex;
+      align-items: center;
+      cursor: pointer;
+      font-size: 1.1em;
+      visibility: hidden;
+    }
+  }
+
+  .filter-item {
+    margin-right: 8px;
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+
+  .footer {
+    position: relative;
+    .todo-needed {
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
+}

@@ -1,12 +1,16 @@
-import React, { useState } from 'react'
-import './App.css'
+import React, {FC} from 'react';
+import {Provider} from 'react-redux';
+import store from './store/store';
+import 'antd/dist/antd.css'
+import './app.scss'
+import TodoApp from './TodoApp';
 
-function App() {
+const App: FC = () => {
   return (
-    <div className="App">
-      div
-    </div>
-  )
-}
+    <Provider store={store}>
+      <TodoApp/>
+    </Provider>
+  );
+};
 
-export default App
+export default App;
