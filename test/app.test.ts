@@ -1,5 +1,5 @@
-import {Todo} from '../src/reducer';
-import store from '../src/store';
+import {Todo} from '../src/store/todoReducer';
+import store from '../src/store/store';
 
 it('可以添加一条 todo', () => {
   const newTodo: Todo = {
