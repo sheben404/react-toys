@@ -1,10 +1,10 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 export const appContext = React.createContext<any>(null);
 
 let state: any = undefined;
 let reducer: any = undefined;
-let listeners: any = [];
+let listeners: any[] = [];
 const setState = (newState: any) => {
   state = newState;
   listeners.map((fn: any) => fn(state));
@@ -68,7 +68,6 @@ const changed = (oldState: any, newState: any) => {
 
 export const connect = (selector?: any, mapDispatchToProps?: any) => (Component: React.FC<any>) => {
   return (props: any) => {
-
     const [, update] = useState({});
     const data = selector ? selector(state) : {state: state};
     const dispatchers = mapDispatchToProps ? mapDispatchToProps(dispatch) : {dispatch};
