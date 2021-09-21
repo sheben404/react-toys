@@ -1,4 +1,5 @@
 import {ADD_TODO, REMOVE_TODO, RESET_TODO, TOGGLE_TODO} from './actionTypes';
+import produce from 'immer';
 
 export interface Todo {
   id: number,
@@ -27,7 +28,9 @@ const initTodos: Todo[] = [
 const todosReducer = (todos: Todo[] = initTodos, action: any) => {
   switch (action.type) {
     case ADD_TODO:
-      return [...todos, action.payload];
+      return produce(todos, draftTodos => {
+        draftTodos.push(action.payload);
+      });
     case REMOVE_TODO:
       return todos.filter(todo => todo.id !== action.payload);
     case TOGGLE_TODO:
