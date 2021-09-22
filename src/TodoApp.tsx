@@ -31,7 +31,7 @@ const TodoApp: FC = () => {
   const onAddTodo = useCallback(() => {
     dispatch(addTodo(task));
     setTask('');
-  }, [dispatch]);
+  }, [dispatch, task]);
 
   const onToggleTodo = useCallback((id: number) => {
     dispatch(toggleTodo(id));
@@ -72,7 +72,7 @@ const TodoApp: FC = () => {
       <Input size="large"
              placeholder="今天想干嘛"
              value={task}
-             onChange={e => setTask(e.target.value)}
+             onChange={e => {setTask(e.target.value)}}
              onPressEnter={onAddTodo}
       />
 
