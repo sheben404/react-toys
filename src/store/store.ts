@@ -1,12 +1,12 @@
 import {createStore, applyMiddleware, compose} from 'redux';
 import ReduxThunk from 'redux-thunk';
 import todosSlice from './todos/slice'
-import filterReducer from './filter/reducer';
+import filterSlice from './filter/slice'
 import { combineReducers,configureStore } from '@reduxjs/toolkit';
 
 const reducer = combineReducers({
   todos: todosSlice.reducer,
-  filter: filterReducer
+  filter: filterSlice.reducer
 });
 
 const store = configureStore({

@@ -3,8 +3,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import {Todo} from './store/todos/reducer';
 import {FilterType} from './store/filter/reducer';
 import {selectFilteredTodos, selectTodoNeeded} from './store/todos/selectors';
-import {actions} from './store/todos/slice';
-import {setFilter} from './store/filter/actionCreators';
+import {actions as sliceActions} from './store/todos/slice';
+import {actions as filterActions} from './store/filter/slice';
 import React from 'react';
 import {Input, List, Radio, Spin} from 'antd';
 import TodoItem from './components/TodoItem';
@@ -20,7 +20,8 @@ export interface StoreType {
   loading: LoadingType
 }
 
-const {addTodo, removeTodo, toggleTodo} = actions;
+const {addTodo, removeTodo, toggleTodo} = sliceActions;
+const {setFilter} = filterActions
 
 const TodoApp: FC = () => {
   const todos = useSelector<StoreType, Todo[]>(selectFilteredTodos);
