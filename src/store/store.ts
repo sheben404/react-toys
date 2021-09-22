@@ -1,20 +1,18 @@
-import {createStore, combineReducers, applyMiddleware, compose} from 'redux';
+import {createStore, applyMiddleware, compose} from 'redux';
 import ReduxThunk from 'redux-thunk';
-import todosReducer from './todos/reducer';
+import todosSlice from './todos/slice'
 import filterReducer from './filter/reducer';
-
+import { combineReducers,configureStore } from '@reduxjs/toolkit';
 
 const reducer = combineReducers({
-  todos: todosReducer,
+  todos: todosSlice.reducer,
   filter: filterReducer
 });
 
-// @ts-ignore
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-const store = createStore(
+const store = configureStore({
   reducer,
-  composeEnhancers(applyMiddleware(ReduxThunk))
-);
+  devTools: true
+})
 
 store.subscribe(() => console.log('update component'));
 

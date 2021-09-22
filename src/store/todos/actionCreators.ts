@@ -3,7 +3,7 @@ import {ADD_TODO, REMOVE_TODO, TOGGLE_TODO} from './actionTypes';
 export const addTodo = (text: string) => ({
   type: ADD_TODO,
   payload: {
-    id: new Date(),
+    id: (new Date()).toISOString(),
     text,
     state: 'todo'
   }

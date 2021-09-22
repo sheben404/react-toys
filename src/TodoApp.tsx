@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {Todo} from './store/todos/reducer';
 import {FilterType} from './store/filter/reducer';
 import {selectFilteredTodos, selectTodoNeeded} from './store/todos/selectors';
-import {addTodo, removeTodo, toggleTodo} from './store/todos/actionCreators';
+import {actions} from './store/todos/slice';
 import {setFilter} from './store/filter/actionCreators';
 import React from 'react';
 import {Input, List, Radio, Spin} from 'antd';
@@ -20,6 +20,8 @@ export interface StoreType {
   loading: LoadingType
 }
 
+const {addTodo, removeTodo, toggleTodo} = actions;
+
 const TodoApp: FC = () => {
   const todos = useSelector<StoreType, Todo[]>(selectFilteredTodos);
   const todoNeeded = useSelector<StoreType, number>(selectTodoNeeded);
@@ -29,7 +31,11 @@ const TodoApp: FC = () => {
 
 
   const onAddTodo = useCallback(() => {
-    dispatch(addTodo(task));
+    dispatch(addTodo({
+      id: (new Date()).toISOString(),
+      text: task,
+      state: 'todo'
+    }));
     setTask('');
   }, [dispatch, task]);
 
@@ -72,7 +78,7 @@ const TodoApp: FC = () => {
       <Input size="large"
              placeholder="今天想干嘛"
              value={task}
-             onChange={e => {setTask(e.target.value)}}
+             onChange={e => {setTask(e.target.value);}}
              onPressEnter={onAddTodo}
       />
 
